@@ -2,7 +2,11 @@ var currentWeatherApi = "https://api.openweathermap.org/data/2.5/weather?q=";
 var forecastApi = "https://api.openweathermap.org/data/2.5/forecast?q=";
 var apiKey = "a6cc699ad74cfce4df66d3e9815f4dcc";
 let cityName = "";
-let cities = 0;
+//let cities = array.localStorage.length; 
+//var array = JSON.parse(localStorage.setItem("cities"))
+var hourly = moment().format("HH")
+var daily = moment().format("d")
+var cities = 0;
 
 
 
@@ -13,12 +17,21 @@ let cities = 0;
 //     console.log(data);
 // })
 
+    for (var i = 0; i < localStorage.length; i++){
+        var getCity = localStorage.getItem(i);
+        var cityList = $(".cityList");
+
+        cityList.append("<li>" + getCity + "</li>");
+}
+
+
+
     $("#button-addon2").on("click", function(event) {
         event.preventDefault();
         var searchValue = $("#searchValue").val();
+        var uvApi = "https://api.openweathermap.org/data/2.5/onecall?"
         var currentCityWeather = currentWeatherApi + searchValue + "&Appid=" + apiKey + "&units=imperial";
         var cityForecast = forecastApi + searchValue + "&Appid=" + apiKey + "&units=imperial";
-
         if(searchValue == "") {
             console.log(currentCityWeather);
             console.log(cityForecast);
@@ -30,7 +43,8 @@ let cities = 0;
                 cityName = cityResponse;
 
                 $("#currentCity").text("Current weather in " + cityName.name);
-
+                 
+                console.log(cities)
                 var saveCities = localStorage.setItem(cities, cityResponse.name);
                 cities = cities + 1;
 
@@ -40,10 +54,27 @@ let cities = 0;
                 $("#currentUv").text();
                 $("#currentImg").attr({"src": "http://openweathermap.org/img/w/" + cityResponse.weather[0].icon + ".png",
                 "height": "100px", "width":"100px"})
+
+                var currentLon = cityResponse.coord.lon;
+                var currentLat = cityResponse.coord.lat;
+
+                console.log(currentLon);
+                console.log(currentLat);
+
+                var currentUv = uvApi + "lat=" + currentLat + "&lon=" + currentLon + "&exclude=" + hourly + daily + "&appid=" + apiKey
                 
+                // display UV index for the current weather
+                $.ajax({
+                    url: currentUv,
+                    method: "GET",
+                }).then (function(uvResponse){
+                    $("#currentUv").text("UV Index: " + uvResponse.current.uvi);
+                })
+
+
             })
         }
-
+            // display 5 day forecast
         $.ajax({
             url: cityForecast,
             method: "GET",
@@ -69,13 +100,6 @@ let cities = 0;
                 forecastDay++;
                 }
             }
-
         })
     })
 
-    for (var i = 0; i < localStorage.length; i++){
-        var getCity = localStorage.getItem(i);
-        var cityList = $(".cityList");
-
-        cityList.append("<li>" + getCity + "</li>");
-}
