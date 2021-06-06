@@ -93,6 +93,7 @@ var cities = 0;
                 $("#day-" + forecastDay).text(month + "/" + day + "/" + year);
                 $("#day" + forecastDay + "-temp").text("Temp: " + forecast.list[i].main.temp);
                 $("#day" + forecastDay + "-hum").text("Humidity: " + forecast.list[i].main.humidity);
+                $("#day" + forecastDay + "-wind").text("Wind Speed: " + forecast.list[i].wind.speed);
                 $("#day" + forecastDay + "-img").attr({"src": "http://openweathermap.org/img/w/" + forecast.list[i].weather[0].icon + ".png",
                 "height": "100px", "width":"100px"});
 
