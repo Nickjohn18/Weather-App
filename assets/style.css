@@ -1,0 +1,13 @@
+#weatherTitle {
+  background-color: lightblue;
+  font-size: 60px;
+  text-align: center;
+}
+body {
+  background-color: whitesmoke;
+}
+
+.forecast {
+  background-color: blue;
+  color: white;
+}
